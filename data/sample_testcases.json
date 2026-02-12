@@ -1,0 +1,34 @@
+[
+  {
+    "id": "TC-PLP-001",
+    "title": "PLP - Filter products by brand",
+    "description": "Verify users can filter product listing by brand and see matching product cards",
+    "module": "PLP",
+    "tags": ["plp", "filter", "catalog"],
+    "steps": ["Open PLP", "Apply brand filter", "Verify results"]
+  },
+  {
+    "id": "TC-PLP-002",
+    "title": "PLP - Sort by price low to high",
+    "description": "Validate product ordering changes correctly",
+    "module": "PLP",
+    "tags": ["plp", "sort"],
+    "steps": ["Open PLP", "Choose sorting", "Verify sequence"]
+  },
+  {
+    "id": "TC-PDP-001",
+    "title": "PDP - Add single item to cart",
+    "description": "Validate add to cart from PDP",
+    "module": "PDP",
+    "tags": ["pdp", "cart"],
+    "steps": ["Open PDP", "Click add to cart", "Verify cart count"]
+  },
+  {
+    "id": "TC-CHK-001",
+    "title": "Checkout - Place order with card",
+    "description": "Verify order placement with valid credit card",
+    "module": "Checkout",
+    "tags": ["checkout", "payment"],
+    "steps": ["Go to checkout", "Enter card details", "Place order"]
+  }
+]
