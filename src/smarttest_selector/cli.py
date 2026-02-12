@@ -1,12 +1,15 @@
 import argparse
 
-from .loader import load_testcases
+from .loader import load_testcases, load_testcases_from_browserstack
 from .selector import SelectorEngine
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="SmartTest Selector")
-    parser.add_argument("--input", required=True, help="Path to testcase file (.json/.csv)")
+    source_group = parser.add_mutually_exclusive_group(required=True)
+    source_group.add_argument("--input", help="Path to testcase file (.json/.csv)")
+    source_group.add_argument("--browserstack-project-id", help="BrowserStack test management project id")
+
     parser.add_argument("--feature", required=True, help="Feature/change description")
     parser.add_argument("--top-k", type=int, default=10, help="Number of testcases to output")
     parser.add_argument("--min-score", type=float, default=0.05, help="Minimum relevance score")
@@ -15,9 +18,28 @@ def main() -> None:
         action="store_true",
         help="Skip OpenAI-compatible reranking",
     )
+
+    parser.add_argument("--browserstack-username", help="BrowserStack username/email")
+    parser.add_argument("--browserstack-access-key", help="BrowserStack access key")
+    parser.add_argument(
+        "--browserstack-endpoint-template",
+        default="https://test-management.browserstack.com/api/v2/projects/{project_id}/test-cases",
+        help="Override BrowserStack API endpoint template",
+    )
     args = parser.parse_args()
 
-    testcases = load_testcases(args.input)
+    if args.input:
+        testcases = load_testcases(args.input)
+    else:
+        if not args.browserstack_username or not args.browserstack_access_key:
+            parser.error("--browserstack-username and --browserstack-access-key are required with --browserstack-project-id")
+        testcases = load_testcases_from_browserstack(
+            project_id=args.browserstack_project_id,
+            username=args.browserstack_username,
+            access_key=args.browserstack_access_key,
+            endpoint_template=args.browserstack_endpoint_template,
+        )
+
     engine = SelectorEngine(testcases)
     results = engine.select(
         feature_query=args.feature,

@@ -12,7 +12,7 @@ it ranks and returns only the most relevant test cases from your master test sui
 
 ## How it works
 
-1. Load test cases from JSON or CSV.
+1. Load test cases from JSON/CSV or directly from BrowserStack Test Management API.
 2. Build a semantic index using a local embedding model (token-vector cosine).
 3. Optionally re-rank with an OpenAI-compatible LLM if `OPENAI_API_KEY` is set.
 4. Output top matching tests with relevance scores and rationale.
@@ -61,6 +61,22 @@ Required: `id`, `title`
 Optional: `description`, `module`, `tags`, `steps`
 
 - `tags` and `steps` can be pipe-separated (`|`) values.
+
+
+### BrowserStack API
+
+You can pull testcases directly using project id + credentials:
+
+```bash
+python -m smarttest_selector.cli \
+  --browserstack-project-id "<project_id>" \
+  --browserstack-username "$BROWSERSTACK_USERNAME" \
+  --browserstack-access-key "$BROWSERSTACK_ACCESS_KEY" \
+  --feature "PLP page filters" \
+  --top-k 10
+```
+
+Optional: if your account uses a different endpoint path, pass `--browserstack-endpoint-template`.
 
 ## LLM re-ranking (optional)
 
