@@ -65,6 +65,17 @@ class SelectorEngine:
             if score >= min_score:
                 scored.append((case, score))
 
+        if not scored and self.testcases:
+            fallback_scored = [
+                (case, cosine_similarity(query_vector, self.case_vectors[case.id]))
+                for case in self.testcases
+            ]
+            fallback_scored.sort(key=lambda item: item[1], reverse=True)
+            return [
+                SelectionResult(testcase=case, score=score, reason="Fallback: low lexical overlap")
+                for case, score in fallback_scored[:top_k]
+            ]
+
         scored.sort(key=lambda item: item[1], reverse=True)
         candidates = scored[: max(top_k * 3, top_k)]
 

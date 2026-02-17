@@ -31,7 +31,7 @@ it ranks and returns only the most relevant test cases from your master test sui
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-python -m smarttest_selector.cli \
+PYTHONPATH=src python -m smarttest_selector.cli \
   --input data/sample_testcases.json \
   --feature "PLP page sorting and filters" \
   --top-k 5
@@ -68,12 +68,13 @@ Optional: `description`, `module`, `tags`, `steps`
 You can pull testcases directly using project id + credentials:
 
 ```bash
-python -m smarttest_selector.cli \
+PYTHONPATH=src python -m smarttest_selector.cli \
   --browserstack-project-id "<project_id>" \
   --browserstack-username "$BROWSERSTACK_USERNAME" \
   --browserstack-access-key "$BROWSERSTACK_ACCESS_KEY" \
   --feature "PLP page filters" \
-  --top-k 10
+  --top-k 10 \
+  --show-source-count
 ```
 
 Optional: if your account uses a different endpoint path, pass `--browserstack-endpoint-template`.
@@ -92,3 +93,9 @@ When enabled, the app first retrieves semantic candidates and then asks the mode
 Feature input: `PLP page`
 
 Expected output: test cases around product list page filters, sort, pagination, and card rendering — while excluding checkout/login cases.
+
+
+Notes:
+- For `--browserstack-username`, use your BrowserStack account username/email only (for example `name@example.com`).
+- Do **not** pass URL style values such as `http://username@browserstack.com`.
+- If you still get no matches, try lowering threshold explicitly with `--min-score 0`.

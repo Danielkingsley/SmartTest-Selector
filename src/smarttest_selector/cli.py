@@ -26,6 +26,11 @@ def main() -> None:
         default="https://test-management.browserstack.com/api/v2/projects/{project_id}/test-cases",
         help="Override BrowserStack API endpoint template",
     )
+    parser.add_argument(
+        "--show-source-count",
+        action="store_true",
+        help="Print number of loaded testcases before selection",
+    )
     args = parser.parse_args()
 
     if args.input:
@@ -39,6 +44,9 @@ def main() -> None:
             access_key=args.browserstack_access_key,
             endpoint_template=args.browserstack_endpoint_template,
         )
+
+    if args.show_source_count:
+        print(f"Loaded testcases: {len(testcases)}")
 
     engine = SelectorEngine(testcases)
     results = engine.select(
